@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Application Form</title>
+
+    <!-- ✅ Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .card {
+            border-radius: 12px;
+        }
+
+        .countdown {
+            font-weight: bold;
+            color: green;
+        }
+
+        option:disabled {
+            color: #999;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+        <div class="card-body">
+
+            <h3 class="text-center mb-4">College of Engineering Application</h3>
+
+            {% if current_round %}
+                <p class="text-center fw-bold">Round: {{ current_round.name }}</p>
+                <p id="countdown" class="text-center countdown"></p>
+            {% endif %}
+
+            {% if error %}
+                <div class="alert alert-danger text-center">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            {% if error == "Application is closed" or error == "No active admission round" %}
+
+                <div class="alert alert-warning text-center">
+                    Application is currently closed.
+                </div>
+
+            {% else %}
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- ✅ Student Identity -->
+                <h5 class="mt-3">Student Identity</h5>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="first_name" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Second Name</label>
+                        <input type="text" name="second_name" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Third Name</label>
+                        <input type="text" name="third_name" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Fourth Name</label>
+                        <input type="text" name="fourth_name" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mother Full Name</label>
+                    <input type="text" name="mother_full_name" class="form-control" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Gender</label>
+                        <select name="gender" class="form-select" required>
+                            <option value="">Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" name="date_of_birth" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- ✅ Contact -->
+                <h5 class="mt-3">Contact Information</h5>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone_number" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email_address" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- ✅ School -->
+                <h5 class="mt-3">School Information</h5>
+
+                <div class="mb-3">
+                    <label class="form-label">School Information</label>
+                    <input type="text" name="school_information" class="form-control" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Branch</label>
+                        <select name="branch" class="form-select" required>
+                            <option value="">Select branch</option>
+                            <option value="scientific">Scientific</option>
+                            <option value="biology">Biology</option>
+                            <option value="applied">Applied</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Graduation Date</label>
+                        <input type="date" name="graduation_date" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- ✅ Academic -->
+                <h5 class="mt-3">Academic Information</h5>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Average</label>
+                        <input type="number" step="0.01" name="average" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Total Sum</label>
+                        <input type="number" step="0.01" name="total_sum" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Lessons</label>
+                        <input type="number" name="number_of_lessons" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- ✅ Upload -->
+                <h5 class="mt-3">Document</h5>
+
+                <div class="mb-3">
+                    <input type="file" name="upload_document" class="form-control">
+                </div>
+
+                <!-- ✅ Preferences -->
+                <h5 class="mt-3">Department Preferences</h5>
+
+                <div class="mb-3">
+                    <label class="form-label">1st Preference</label>
+                    <select id="dept1" name="department_preference_1" class="form-select" required>
+                        <option value="">Select</option>
+                        {% for department in departments %}
+                            <option value="{{ department.id }}">{{ department.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">2nd Preference</label>
+                    <select id="dept2" name="department_preference_2" class="form-select" required>
+                        <option value="">Select</option>
+                        {% for department in departments %}
+                            <option value="{{ department.id }}">{{ department.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">3rd Preference</label>
+                    <select id="dept3" name="department_preference_3" class="form-select" required>
+                        <option value="">Select</option>
+                        {% for department in departments %}
+                            <option value="{{ department.id }}">{{ department.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    Submit Application
+                </button>
+
+            </form>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ✅ Hidden for countdown -->
+<input type="hidden" id="endDateValue" value="{{ current_round.end_date|date:'Y-m-d H:i:s' }}">
+
+<!-- ✅ Scripts -->
+<script>
+const endDateStr = document.getElementById("endDateValue")?.value;
+
+if (endDateStr) {
+    const endDate = new Date(endDateStr).getTime();
+
+    setInterval(function () {
+        const now = new Date().getTime();
+        const distance = endDate - now;
+
+        if (distance < 0) {
+            document.getElementById("countdown").innerHTML = "Application Closed";
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+        document.getElementById("countdown").innerHTML =
+            "Time remaining: " + days + "d " + hours + "h";
+    }, 1000);
+}
+
+// ✅ Disable duplicate selections
+function updateDepartmentOptions() {
+    const selects = [
+        document.getElementById("dept1"),
+        document.getElementById("dept2"),
+        document.getElementById("dept3")
+    ];
+
+    const selected = selects.map(s => s.value);
+
+    selects.forEach(select => {
+        Array.from(select.options).forEach(option => {
+            if (option.value === "") return;
+
+            option.disabled = selected.includes(option.value) && option.value !== select.value;
+        });
+    });
+}
+
+document.querySelectorAll("#dept1, #dept2, #dept3")
+    .forEach(el => el.addEventListener("change", updateDepartmentOptions));
+
+updateDepartmentOptions();
+</script>
+
+</body>
+</html>

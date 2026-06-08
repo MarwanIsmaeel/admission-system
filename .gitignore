@@ -1,0 +1,19 @@
+# Django
+*.py[cod]
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+.env
+
+# Node.js / Vue
+node_modules/
+dist/
+dist-ssr
+*.local
+.vscode/
+
+# Build and OS files
+.DS_Store
+Thumbs.db
+*.log
