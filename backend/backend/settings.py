@@ -42,6 +42,63 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
 ]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Admission Admin",
+    "site_header": "Admission System",
+    "site_brand": "College of Engineering",
+    "welcome_sign": "Welcome to the Admission Management System",
+    "copyright": "College of Engineering - Nahrain University",
+    "search_model": ["applications.Application"],
+    "show_ui_builder": False,
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "applications.Application": "fas fa-file-invoice",
+        "applications.Voucher": "fas fa-ticket-alt",
+        "applications.Department": "fas fa-university",
+        "applications.AdmissionRound": "fas fa-calendar-alt",
+    },
+    # ✅ Fix layout gap and force full width
+    "changeform_format": "single",
+    "use_google_fonts": True,
+    "show_sidebar": True,
+    "navigation_expanded": True,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-primary",
+    "navbar": "navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_fixed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
