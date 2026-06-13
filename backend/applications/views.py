@@ -3,6 +3,7 @@ from rest_framework import status, generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django_ratelimit.decorators import ratelimit
 
 from django.http import HttpResponse
 from openpyxl import Workbook
@@ -18,8 +19,14 @@ from .serializers import (
 # =========================================================
 # ✅ 1. Voucher Verification API
 # =========================================================
+@ratelimit(key='ip', rate='5/15m', block=False)
 @api_view(['POST'])
 def verify_voucher(request):
+    if getattr(request, 'limited', False):
+        return Response({
+            'error': 'لقد تجاوزت الحد المسموح به للمحاولات. يرجى الانتظار 15 دقيقة والمحاولة مرة أخرى.'
+        }, status=status.HTTP_429_TOO_MANY_REQUESTS)
+
     code = request.data.get('code', '').strip()
     if not code:
         return Response({'error': 'Please enter a voucher code'}, status=status.HTTP_400_BAD_REQUEST)

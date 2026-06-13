@@ -47,15 +47,18 @@ const verifyVoucher = async () => {
     auth.setVoucher(code.value, response.data);
     router.push('/apply');
   } catch (err) {
-    if (err.response?.status === 404) {
+    if (err.response?.status === 429) {
+        error.value = err.response.data.error; // Show the backend's "Too many attempts" message
+    } else if (err.response?.status === 404) {
         error.value = 'رمز التفعيل غير صحيح';
     } else if (err.response?.data?.error) {
         // Handle specific "already used" message
-        error.value = err.response.data.error === 'This voucher is already used' ? 'هذا الرمز مستخدم بالفعل' : 'حدث خطأ ما';
+        error.value = err.response.data.error === 'This voucher is already used' ? 'هذا الرمز مستخدم بالفعل' : err.response.data.error;
     } else {
         error.value = 'تعذر التحقق من الرمز. يرجى المحاولة لاحقاً';
     }
   } finally {
+
     loading.value = false;
   }
 };
