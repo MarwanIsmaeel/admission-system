@@ -3,7 +3,7 @@
     <h1 class="text-3xl font-bold mb-6 text-center text-gray-900">استعلام عن حالة القبول</h1>
     <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
       <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">أدخل رمز القسيمة</label>
+        <label class="block text-sm font-medium text-gray-700 mb-1">أدخل رمز </label>
         <input 
           v-model="code" 
           type="text" 

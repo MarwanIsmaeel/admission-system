@@ -1,9 +1,9 @@
 <template>
   <div class="max-w-md mx-auto bg-white p-8 border border-gray-200 rounded-lg shadow-sm">
-    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-right">أدخل رمز القسيمة</h2>
+    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-right">أدخل رمز التفعيل</h2>
     <form @submit.prevent="verifyVoucher">
       <div class="mb-4">
-        <label for="code" class="block text-sm font-medium text-gray-700 text-right">رمز القسيمة</label>
+        <label for="code" class="block text-sm font-medium text-gray-700 text-right">رمز التفعيل</label>
         <input 
           v-model="code" 
           type="text" 
@@ -48,7 +48,7 @@ const verifyVoucher = async () => {
     router.push('/apply');
   } catch (err) {
     if (err.response?.status === 404) {
-        error.value = 'رمز القسيمة غير صحيح';
+        error.value = 'رمز التفعيل غير صحيح';
     } else if (err.response?.data?.error) {
         // Handle specific "already used" message
         error.value = err.response.data.error === 'This voucher is already used' ? 'هذا الرمز مستخدم بالفعل' : 'حدث خطأ ما';
