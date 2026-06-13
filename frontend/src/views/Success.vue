@@ -24,7 +24,7 @@
           to="/" 
           class="block w-full py-2 px-4 bg-gray-100 text-gray-700 font-bold rounded-md hover:bg-gray-200 transition"
         >
-          العودة للصفحة الرئيسية
+          العودة لصفحة التعليمات
         </router-link>
       </div>
     </div>
