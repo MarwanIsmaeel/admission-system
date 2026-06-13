@@ -274,7 +274,25 @@ onMounted(async () => {
 });
 
 const handleFileUpload = (event) => {
-  upload_document.value = event.target.files[0];
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // ✅ 1. Validate Extension
+  const validTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+  if (!validTypes.includes(file.type)) {
+    alert('نوع الملف غير مدعوم. يرجى رفع ملفات بصيغة PDF أو JPG أو PNG فقط.');
+    event.target.value = ''; // Reset input
+    return;
+  }
+
+  // ✅ 2. Validate Size (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('حجم الملف كبير جداً. يجب ألا يتجاوز حجم الملف 5 ميجابايت.');
+    event.target.value = ''; // Reset input
+    return;
+  }
+
+  upload_document.value = file;
 };
 
 const submitApplication = async () => {

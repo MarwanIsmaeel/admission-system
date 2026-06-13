@@ -2,7 +2,19 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from datetime import date
 import secrets
+import os
 
+def validate_file_extension_and_size(value):
+    # ✅ 1. Check Extension
+    ext = os.path.splitext(value.name)[1]
+    valid_extensions = ['.pdf', '.jpg', '.jpeg', '.png']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError('نوع الملف غير مدعوم. يرجى رفع ملفات بصيغة PDF أو JPG أو PNG فقط.')
+    
+    # ✅ 2. Check Size (5MB Limit)
+    limit = 5 * 1024 * 1024
+    if value.size > limit:
+        raise ValidationError('حجم الملف كبير جداً. يجب ألا يتجاوز حجم الملف 5 ميجابايت.')
 
 # =========================================================
 # ✅ Voucher Model
@@ -133,6 +145,7 @@ class Application(models.Model):
     # -----------------------------
     upload_document = models.FileField(
         upload_to='documents/applications/',
+        validators=[validate_file_extension_and_size],
         null=True,
         blank=True
     )
