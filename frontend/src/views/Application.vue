@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-4xl mx-auto pb-12 text-right">
     <div v-if="!auth.voucherCode" class="text-center py-12 bg-white rounded-lg shadow-sm border">
-      <p class="text-red-500 mb-4">لا توجد جلسة نشطة. يرجى التحقق من القسيمة أولاً.</p>
+      <p class="text-red-500 mb-4">لا توجد جلسة نشطة. يرجى التحقق من رمز التفعيل أولاً.</p>
       <router-link to="/" class="text-indigo-600 font-bold hover:underline">العودة للرئيسية</router-link>
     </div>
 

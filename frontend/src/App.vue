@@ -5,8 +5,8 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex">
-            <router-link to="/" class="flex-shrink-0 flex items-center font-bold text-white text-xl">
-             جامعة النهرين – كلية الهندسة – نظام إدارة التقديم للدراسة المسائية
+            <router-link to="/" class="flex-shrink-0 flex items-center  text-white text-xl">
+              نظام إدارة التقديم للدراسة المسائية
             </router-link>
             <div class="hidden sm:-my-px sm:mr-10 sm:flex sm:space-x-reverse sm:space-x-8">
               <router-link 
