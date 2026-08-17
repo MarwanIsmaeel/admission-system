@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            padding: 40px;
+        }
+
+        .container {
+            width: 900px;
+            margin: auto;
+        }
+
+        .card {
+            display: inline-block;
+            width: 200px;
+            margin: 10px;
+            padding: 20px;
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .total { background: #007bff; }
+        .accepted { background: green; }
+        .rejected { background: red; }
+        .not_allocated { background: gray; }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Dashboard - {{ round.name }}</h2>
+
+    <div class="card total">
+        <h3>Total</h3>
+        <p>{{ total_applications }}</p>
+    </div>
+
+    <div class="card accepted">
+        <h3>Accepted</h3>
+        <p>{{ accepted }}</p>
+    </div>
+
+    <div class="card rejected">
+        <h3>Rejected</h3>
+        <p>{{ rejected }}</p>
+    </div>
+
+    <div class="card not_allocated">
+        <h3>Not Allocated</h3>
+        <p>{{ not_allocated }}</p>
+    </div>
+
+    <h3>Department Statistics</h3>
+
+    <table>
+        <tr>
+            <th>Department</th>
+            <th>Capacity</th>
+            <th>Assigned</th>
+            <th>Remaining</th>
+        </tr>
+
+        {% for dept in department_stats %}
+        <tr>
+            <td>{{ dept.name }}</td>
+            <td>{{ dept.capacity }}</td>
+            <td>{{ dept.assigned }}</td>
+            <td>{{ dept.remaining }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+</body>
+</html>
