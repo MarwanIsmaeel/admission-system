@@ -39,10 +39,10 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div class="text-gray-400 text-sm font-medium tracking-wide">
-            &copy; {{ new Date().getFullYear() }} COLLEGE OF ENGINEERING. ALL RIGHTS RESERVED.
+            All Rights Reserved &copy; {{ new Date().getFullYear() }} College of Engineering.
           </div>
-          <div class="flex items-center space-x-6 text-sm text-gray-400 font-semibold uppercase tracking-widest">
-            <span>AL-NAHRAIN UNIVERSITY</span>
+          <div class="flex items-center space-x-6 text-sm text-gray-400 font-semibold  tracking-widest">
+            <span>AL-Nahrain University</span>
           </div>
         </div>
       </div>
