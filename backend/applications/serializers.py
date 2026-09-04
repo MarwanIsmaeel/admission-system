@@ -47,7 +47,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'voucher', 'voucher_code', 'first_name', 'second_name', 'third_name', 'fourth_name',
             'full_name', 'mother_full_name', 'phone_number', 'email_address', 'gender', 'is_faculty_child', 'date_of_birth',
-            'examination_id', 'branch', 'graduation_attempt', 'graduation_date', 'average', 'total_sum', 'number_of_lessons',
+            'examination_id', 'branch', 'graduation_attempt', 'graduation_date', 'average', 'original_total_sum', 'total_sum', 'number_of_lessons',
             'upload_document', 'round', 'round_name', 'department_preference_1', 'pref_1_name',
             'department_preference_2', 'pref_2_name', 'department_preference_3', 'pref_3_name',
             'assigned_department', 'assigned_dept_name', 'allocation_round', 'status', 'created_at'

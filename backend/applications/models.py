@@ -163,7 +163,16 @@ class Application(models.Model):
     # Academic data
     # -----------------------------
     average = models.DecimalField(max_digits=5, decimal_places=2, db_index=True)
-    total_sum = models.DecimalField(max_digits=8, decimal_places=2)
+    # Original total sum entered by student before additions
+    original_total_sum = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name='المجموع الأصلي (قبل الإضافة)'
+    )
+    # Final total sum after bonus additions
+    total_sum = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='المجموع الكلي النهائي (بعد الإضافة)')
     number_of_lessons = models.PositiveIntegerField()
 
     # -----------------------------
@@ -267,10 +276,19 @@ class Application(models.Model):
             raise ValidationError("Graduation date cannot be in the future.")
 
     def save(self, *args, **kwargs):
-        # ✅ Automatically add 7 bonus marks for First Round ("الدور الأول") on new application creation
+        # ✅ Automatically add bonus marks (e.g. +7 for First Round) on new application creation
         if not self.pk:
+            # Preserve the exact sum entered by the student before additions
+            if self.original_total_sum is None and self.total_sum is not None:
+                self.original_total_sum = Decimal(str(self.total_sum))
+
+            bonus = Decimal('0.00')
             if self.graduation_attempt == 'first_round':
-                self.total_sum = Decimal(str(self.total_sum)) + Decimal('7.00')
+                bonus += Decimal('7.00')
+
+            # Calculate final total sum = original_total_sum + bonus
+            if self.original_total_sum is not None:
+                self.total_sum = Decimal(str(self.original_total_sum)) + bonus
             
             # Recalculate average based on updated total_sum and number_of_lessons
             if self.number_of_lessons and self.number_of_lessons > 0:

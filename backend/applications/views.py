@@ -143,19 +143,46 @@ def export_applications_excel(request):
     sheet = workbook.active
     sheet.title = "Applications"
 
-    headers = ["Full Name", "Average", "Branch", "Faculty Child", "Graduation Attempt", "1st Preference", "2nd Preference", "3rd Preference", "Assigned Department", "Status", "Voucher Code"]
+    headers = [
+        "الاسم الكامل", "الرقم الامتحاني", "الفرع", "من أبناء التدريسيين", "دور التخرج",
+        "المجموع الأصلي (قبل الإضافة)", "المجموع الكلي النهائي (بعد الإضافة)", "عدد الدروس", "المعدل النهائي (%)",
+        "الرغبة الأولى", "الرغبة الثانية", "الرغبة الثالثة", "القسم المقبول فيه",
+        "حالة الطلب", "رقم الهاتف", "البريد الإلكتروني", "رمز التفعيل"
+    ]
     sheet.append(headers)
+
+    branch_map = {'scientific': 'علمي', 'biology': 'أحيائي', 'applied': 'تطبيقي'}
+    status_map = {
+        'submitted': 'تم التقديم',
+        'pending': 'قيد المعالجة',
+        'accepted': 'تم القبول',
+        'rejected': 'مرفوض',
+        'not_allocated': 'لم يحصل على قبول',
+        'draft': 'مسودة'
+    }
 
     applications = Application.objects.select_related('department_preference_1', 'department_preference_2', 'department_preference_3', 'assigned_department', 'voucher').all()
 
     for app in applications:
+        orig_sum = app.original_total_sum if app.original_total_sum is not None else app.total_sum
         sheet.append([
-            app.full_name, app.average, app.branch, app.get_is_faculty_child_display(), app.get_graduation_attempt_display(),
+            app.full_name,
+            app.examination_id,
+            branch_map.get(app.branch, app.branch),
+            app.get_is_faculty_child_display(),
+            app.get_graduation_attempt_display(),
+            orig_sum,
+            app.total_sum,
+            app.number_of_lessons,
+            app.average,
             app.department_preference_1.name if app.department_preference_1 else "",
             app.department_preference_2.name if app.department_preference_2 else "",
             app.department_preference_3.name if app.department_preference_3 else "",
             app.assigned_department.name if app.assigned_department else "",
-            app.status, app.voucher.code
+            status_map.get(app.status, app.status),
+            app.phone_number,
+            app.email_address,
+            app.voucher.code
         ])
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
