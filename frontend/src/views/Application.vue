@@ -15,14 +15,25 @@
     </div>
 
     <div v-else>
-      <div class="mb-8 flex justify-between items-end flex-row-reverse">
+      <div class="mb-6 grid grid-cols-3 items-center gap-2 sm:gap-4 pb-4 border-b border-gray-200">
+        <!-- Right side: University & College Name (Arabic Only) -->
         <div class="text-right">
-          <h1 class="text-3xl font-bold text-gray-900">استمارة التقديم الإلكتروني</h1>
-          <p class="text-gray-600 mt-1">الرمز: <span class="font-mono font-bold text-indigo-600">{{ auth.voucherCode }}</span></p>
+          <h2 class="text-xs sm:text-base md:text-xl font-bold text-gray-900 leading-tight">جامعة النهرين</h2>
+          <p class="text-xs sm:text-base md:text-xl font-semibold text-gray-900 leading-tight">كلية الهندسة</p>
         </div>
-        <div class="text-left">
-          <p class="text-sm text-gray-500">الدورة الحالية</p>
-          <p class="font-bold text-gray-900">{{ currentRound.name }}</p>
+
+        <!-- Middle side: Form Title -->
+        <div class="text-center">
+          <h1 class="text-xs sm:text-lg md:text-2xl font-bold text-gray-900 leading-tight">استمارة التقديم الإلكتروني</h1>
+        </div>
+
+        <!-- Left side: Engineering College Logo -->
+        <div class="flex justify-end">
+          <img 
+            :src="logo" 
+            alt="شعار كلية الهندسة - جامعة النهرين" 
+            class="h-10 w-10 sm:h-14 sm:w-14 md:h-20 md:w-20 object-contain rounded-full p-0.5 sm:p-1 bg-white border border-gray-200 shadow-sm"
+          />
         </div>
       </div>
 
@@ -240,6 +251,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '../api';
 import { useAuthStore } from '../stores/auth';
+import logo from '../assets/logo.jpg';
 
 const router = useRouter();
 const auth = useAuthStore();
