@@ -108,13 +108,22 @@
               <label class="block text-sm font-medium text-gray-700"> الرقم الامتحاني <span class="text-red-500">*</span></label>
               <input v-model="form.examination_id" type="text" required class="mt-1 block w-full border rounded-md p-2 shadow-sm font-mono">
             </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700">الفرع <span class="text-red-500">*</span></label>
                 <select v-model="form.branch" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
                   <option value="scientific">علمي</option>
                   <option value="biology">أحيائي</option>
                   <option value="applied">تطبيقي</option>
+                </select>
+              </div>
+              <!-- Graduation Attempt Dropdown Field (دور التخرج) -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700">دور التخرج <span class="text-red-500">*</span></label>
+                <select v-model="form.graduation_attempt" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
+                  <option value="first_round">الدور الأول</option>
+                  <option value="second_round">الدور الثاني</option>
+                  <option value="third_round">الدور الثالث</option>
                 </select>
               </div>
               <div>
@@ -241,6 +250,7 @@ const form = ref({
   email_address: '',
   examination_id: '',
   branch: 'scientific',
+  graduation_attempt: 'first_round',
   graduation_date: '',
   average: null,
   total_sum: null,

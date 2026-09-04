@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from datetime import date
+from decimal import Decimal
 import secrets
 import os
 
@@ -95,6 +96,13 @@ class Application(models.Model):
         ('no', 'كلا'),
     ]
 
+    # Choices for graduation attempt ("دور التخرج")
+    GRADUATION_ATTEMPT_CHOICES = [
+        ('first_round', 'الدور الأول'),
+        ('second_round', 'الدور الثاني'),
+        ('third_round', 'الدور الثالث'),
+    ]
+
     BRANCH_CHOICES = [
         ('scientific', 'Scientific'),
         ('biology', 'Biology'),
@@ -142,6 +150,13 @@ class Application(models.Model):
 
     examination_id = models.CharField(max_length=50, unique=True)
     branch = models.CharField(max_length=20, choices=BRANCH_CHOICES)
+    # Graduation attempt ("دور التخرج")
+    graduation_attempt = models.CharField(
+        max_length=20,
+        choices=GRADUATION_ATTEMPT_CHOICES,
+        default='first_round',
+        verbose_name='دور التخرج'
+    )
     graduation_date = models.DateField()
 
     # -----------------------------
@@ -250,6 +265,18 @@ class Application(models.Model):
 
         if self.graduation_date > date.today():
             raise ValidationError("Graduation date cannot be in the future.")
+
+    def save(self, *args, **kwargs):
+        # ✅ Automatically add 7 bonus marks for First Round ("الدور الأول") on new application creation
+        if not self.pk:
+            if self.graduation_attempt == 'first_round':
+                self.total_sum = Decimal(str(self.total_sum)) + Decimal('7.00')
+            
+            # Recalculate average based on updated total_sum and number_of_lessons
+            if self.number_of_lessons and self.number_of_lessons > 0:
+                self.average = round(Decimal(str(self.total_sum)) / Decimal(str(self.number_of_lessons)), 2)
+
+        super().save(*args, **kwargs)
 
     # -----------------------------
     # Display helpers

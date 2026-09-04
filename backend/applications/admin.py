@@ -15,7 +15,7 @@ def export_to_excel(modeladmin, request, queryset):
     sheet.title = "Applications"
 
     headers = [
-        "Full Name", "Average", "Branch", "Faculty Child", "Exam ID", "1st Choice", "2nd Choice", "3rd Choice", 
+        "Full Name", "Average", "Branch", "Faculty Child", "Graduation Attempt", "Exam ID", "1st Choice", "2nd Choice", "3rd Choice", 
         "Assigned Department", "Status", "Phone", "Email", "Voucher"
     ]
     sheet.append(headers)
@@ -29,6 +29,7 @@ def export_to_excel(modeladmin, request, queryset):
             app.average,
             app.branch,
             app.get_is_faculty_child_display(),
+            app.get_graduation_attempt_display(),
             app.examination_id,
             app.department_preference_1.name if app.department_preference_1 else "",
             app.department_preference_2.name if app.department_preference_2 else "",
@@ -246,6 +247,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     list_display = [
         'full_name_display',
         'is_faculty_child',
+        'graduation_attempt',
         'average',
         'round',
         'assigned_department',
@@ -256,6 +258,7 @@ class ApplicationAdmin(admin.ModelAdmin):
 
     list_filter = [
         'is_faculty_child',
+        'graduation_attempt',
         'round',
         'status',
         'branch',

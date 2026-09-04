@@ -143,14 +143,14 @@ def export_applications_excel(request):
     sheet = workbook.active
     sheet.title = "Applications"
 
-    headers = ["Full Name", "Average", "Branch", "Faculty Child", "1st Preference", "2nd Preference", "3rd Preference", "Assigned Department", "Status", "Voucher Code"]
+    headers = ["Full Name", "Average", "Branch", "Faculty Child", "Graduation Attempt", "1st Preference", "2nd Preference", "3rd Preference", "Assigned Department", "Status", "Voucher Code"]
     sheet.append(headers)
 
     applications = Application.objects.select_related('department_preference_1', 'department_preference_2', 'department_preference_3', 'assigned_department', 'voucher').all()
 
     for app in applications:
         sheet.append([
-            app.full_name, app.average, app.branch, app.get_is_faculty_child_display(),
+            app.full_name, app.average, app.branch, app.get_is_faculty_child_display(), app.get_graduation_attempt_display(),
             app.department_preference_1.name if app.department_preference_1 else "",
             app.department_preference_2.name if app.department_preference_2 else "",
             app.department_preference_3.name if app.department_preference_3 else "",
