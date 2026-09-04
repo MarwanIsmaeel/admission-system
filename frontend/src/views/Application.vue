@@ -155,7 +155,7 @@
               </div>
               <!-- Conditional French Exam Mark Input Field -->
               <div v-if="form.has_french_language === 'yes'">
-                <label class="block text-sm font-medium text-gray-700">درجة امتحان اللغة الفرنسية (0-100) <span class="text-red-500">*</span></label>
+                <label class="block text-sm font-medium text-gray-700">درجة امتحان اللغة الفرنسية <span class="text-red-500">*</span></label>
                 <input 
                   v-model="form.french_degree" 
                   type="number" 
@@ -186,7 +186,7 @@
                 required 
                 class="mt-1 block w-full border rounded-md p-2 shadow-sm"
               >
-              <p class="text-[10px] text-gray-500 mt-1">يجب أن يكون بين 50 و 100</p>
+              <!-- <p class="text-[10px] text-gray-500 mt-1">يجب أن يكون بين 50 و 100</p> -->
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700">المجموع الكلي <span class="text-red-500">*</span></label>
@@ -198,7 +198,7 @@
             </div>
           </div>
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700">رفع الوثائق (PDF أو صور) <span class="text-red-500">*</span></label>
+            <label class="block text-sm font-medium text-gray-700">وثيقة الدراسة الاعدادية (PDF أو JPG)  <span class="text-red-500">*</span></label>
             <input @change="handleFileUpload" type="file" required class="mt-1 block w-full text-sm text-gray-500 file:ml-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
           </div>
         </section>
