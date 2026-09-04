@@ -145,6 +145,7 @@ def export_applications_excel(request):
 
     headers = [
         "الاسم الكامل", "الرقم الامتحاني", "الفرع", "من أبناء التدريسيين", "دور التخرج",
+        "اللغة الفرنسية", "درجة اللغة الفرنسية",
         "المجموع الأصلي (قبل الإضافة)", "المجموع الكلي النهائي (بعد الإضافة)", "عدد الدروس", "المعدل النهائي (%)",
         "الرغبة الأولى", "الرغبة الثانية", "الرغبة الثالثة", "القسم المقبول فيه",
         "حالة الطلب", "رقم الهاتف", "البريد الإلكتروني", "رمز التفعيل"
@@ -171,6 +172,8 @@ def export_applications_excel(request):
             branch_map.get(app.branch, app.branch),
             app.get_is_faculty_child_display(),
             app.get_graduation_attempt_display(),
+            app.get_has_french_language_display(),
+            app.french_degree if app.has_french_language == 'yes' else "-",
             orig_sum,
             app.total_sum,
             app.number_of_lessons,

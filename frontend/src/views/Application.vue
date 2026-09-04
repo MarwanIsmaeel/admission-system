@@ -108,7 +108,7 @@
               <label class="block text-sm font-medium text-gray-700"> الرقم الامتحاني <span class="text-red-500">*</span></label>
               <input v-model="form.examination_id" type="text" required class="mt-1 block w-full border rounded-md p-2 shadow-sm font-mono">
             </div>
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700">الفرع <span class="text-red-500">*</span></label>
                 <select v-model="form.branch" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
@@ -131,6 +131,30 @@
                 <select v-model="graduation_year" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
                     <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
                 </select>
+              </div>
+            </div>
+            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- French Language Option Dropdown (هل لديك لغة فرنسية) -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700">هل لديك لغة فرنسية <span class="text-red-500">*</span></label>
+                <select v-model="form.has_french_language" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
+                  <option value="no">كلا</option>
+                  <option value="yes">نعم</option>
+                </select>
+              </div>
+              <!-- Conditional French Exam Mark Input Field -->
+              <div v-if="form.has_french_language === 'yes'">
+                <label class="block text-sm font-medium text-gray-700">درجة امتحان اللغة الفرنسية (0-100) <span class="text-red-500">*</span></label>
+                <input 
+                  v-model="form.french_degree" 
+                  type="number" 
+                  step="0.01" 
+                  min="0" 
+                  max="100" 
+                  required 
+                  placeholder="أدخل درجة الامتحان"
+                  class="mt-1 block w-full border rounded-md p-2 shadow-sm"
+                >
               </div>
             </div>
           </div>
@@ -252,6 +276,8 @@ const form = ref({
   branch: 'scientific',
   graduation_attempt: 'first_round',
   graduation_date: '',
+  has_french_language: 'no',
+  french_degree: null,
   average: null,
   total_sum: null,
   number_of_lessons: null,
@@ -324,6 +350,11 @@ const submitApplication = async () => {
 
   // Set graduation date to first day of selected year for backend compatibility
   form.value.graduation_date = `${graduation_year.value}-01-01`;
+
+  // Reset french_degree if has_french_language is 'no'
+  if (form.value.has_french_language !== 'yes') {
+    form.value.french_degree = null;
+  }
 
   const formData = new FormData();
   formData.append('voucher_code', auth.voucherCode);

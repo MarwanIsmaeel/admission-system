@@ -96,6 +96,11 @@ class Application(models.Model):
         ('no', 'كلا'),
     ]
 
+    FRENCH_LANGUAGE_CHOICES = [
+        ('yes', 'نعم'),
+        ('no', 'كلا'),
+    ]
+
     # Choices for graduation attempt ("دور التخرج")
     GRADUATION_ATTEMPT_CHOICES = [
         ('first_round', 'الدور الأول'),
@@ -158,6 +163,21 @@ class Application(models.Model):
         verbose_name='دور التخرج'
     )
     graduation_date = models.DateField()
+
+    # French language option ("هل لديك لغة فرنسية")
+    has_french_language = models.CharField(
+        max_length=5,
+        choices=FRENCH_LANGUAGE_CHOICES,
+        default='no',
+        verbose_name='هل لديك لغة فرنسية'
+    )
+    french_degree = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name='درجة اللغة الفرنسية'
+    )
 
     # -----------------------------
     # Academic data
@@ -275,18 +295,39 @@ class Application(models.Model):
         if self.graduation_date > date.today():
             raise ValidationError("Graduation date cannot be in the future.")
 
+        # ✅ French language validation
+        if self.has_french_language == 'yes':
+            if self.french_degree is None:
+                raise ValidationError("يرجى إدخال درجة اللغة الفرنسية.")
+            if self.french_degree < 0 or self.french_degree > 100:
+                raise ValidationError("درجة اللغة الفرنسية يجب أن تكون بين 0 و 100.")
+
     def save(self, *args, **kwargs):
-        # ✅ Automatically add bonus marks (e.g. +7 for First Round) on new application creation
+        # ✅ Automatically add all bonus marks (Graduation, French, Faculty Child) on new application creation
         if not self.pk:
             # Preserve the exact sum entered by the student before additions
             if self.original_total_sum is None and self.total_sum is not None:
                 self.original_total_sum = Decimal(str(self.total_sum))
 
             bonus = Decimal('0.00')
+
+            # 1. Graduation Attempt Bonus (+7 for First Round)
             if self.graduation_attempt == 'first_round':
                 bonus += Decimal('7.00')
 
-            # Calculate final total sum = original_total_sum + bonus
+            # 2. French Language Bonus (french_degree * 0.08)
+            if self.has_french_language == 'yes' and self.french_degree is not None:
+                french_bonus = Decimal(str(self.french_degree)) * Decimal('0.08')
+                bonus += french_bonus
+            else:
+                self.french_degree = None
+
+            # 3. Faculty Child Bonus (5 * number_of_lessons)
+            if self.is_faculty_child == 'yes' and self.number_of_lessons and self.number_of_lessons > 0:
+                faculty_bonus = Decimal('5.00') * Decimal(str(self.number_of_lessons))
+                bonus += faculty_bonus
+
+            # Calculate final total sum = original_total_sum + all bonuses
             if self.original_total_sum is not None:
                 self.total_sum = Decimal(str(self.original_total_sum)) + bonus
             
