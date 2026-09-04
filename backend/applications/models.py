@@ -162,7 +162,10 @@ class Application(models.Model):
         default='first_round',
         verbose_name='دور التخرج'
     )
-    graduation_date = models.DateField()
+    graduation_date = models.CharField(
+        max_length=9,
+        verbose_name='سنة التخرج'
+    )
 
     # French language option ("هل لديك لغة فرنسية")
     has_french_language = models.CharField(
@@ -292,8 +295,7 @@ class Application(models.Model):
         if self.date_of_birth >= date.today():
             raise ValidationError("Date of birth must be in the past.")
 
-        if self.graduation_date > date.today():
-            raise ValidationError("Graduation date cannot be in the future.")
+        # graduation_date is stored as an academic year string (e.g. "2025-2026"), no date comparison needed
 
         # ✅ French language validation
         if self.has_french_language == 'yes':

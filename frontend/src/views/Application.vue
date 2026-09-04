@@ -128,8 +128,8 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700">سنة التخرج <span class="text-red-500">*</span></label>
-                <select v-model="graduation_year" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
-                    <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                <select v-model="form.graduation_date" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
+                    <option v-for="year in academicYears" :key="year" :value="year">{{ year }}</option>
                 </select>
               </div>
             </div>
@@ -251,12 +251,12 @@ const error = ref('');
 const departments = ref([]);
 const currentRound = ref(null);
 
-const graduation_year = ref(new Date().getFullYear());
-const years = computed(() => {
+const academicYears = computed(() => {
     const currentYear = new Date().getFullYear();
     const range = [];
-    for (let i = currentYear; i >= 2000; i--) {
-        range.push(i);
+    // Start from currentYear-1 so the latest academic year shown is e.g. 2025-2026
+    for (let startYear = currentYear - 1; startYear >= 2000; startYear--) {
+        range.push(`${startYear}-${startYear + 1}`);
     }
     return range;
 });
@@ -275,7 +275,7 @@ const form = ref({
   examination_id: '',
   branch: 'scientific',
   graduation_attempt: 'first_round',
-  graduation_date: '',
+  graduation_date: `${new Date().getFullYear() - 1}-${new Date().getFullYear()}`,
   has_french_language: 'no',
   french_degree: null,
   average: null,
@@ -348,8 +348,7 @@ const submitApplication = async () => {
   submitting.value = true;
   error.value = '';
 
-  // Set graduation date to first day of selected year for backend compatibility
-  form.value.graduation_date = `${graduation_year.value}-01-01`;
+  // graduation_date is already a formatted academic year string (e.g. "2025-2026"), send directly
 
   // Reset french_degree if has_french_language is 'no'
   if (form.value.has_french_language !== 'yes') {

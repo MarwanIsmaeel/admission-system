@@ -15,7 +15,7 @@ def export_to_excel(modeladmin, request, queryset):
     sheet.title = "Applications"
 
     headers = [
-        "الاسم الكامل", "الرقم الامتحاني", "الفرع", "من أبناء التدريسيين", "دور التخرج",
+        "الاسم الكامل", "الرقم الامتحاني", "الفرع", "السنة الدراسية للتخرج", "من أبناء التدريسيين", "دور التخرج",
         "اللغة الفرنسية", "درجة اللغة الفرنسية",
         "المجموع الأصلي (قبل الإضافة)", "المجموع الكلي النهائي (بعد الإضافة)", "عدد الدروس", "المعدل النهائي (%)",
         "الرغبة الأولى", "الرغبة الثانية", "الرغبة الثالثة", "القسم المقبول فيه",
@@ -42,6 +42,7 @@ def export_to_excel(modeladmin, request, queryset):
             app.full_name,
             app.examination_id,
             branch_map.get(app.branch, app.branch),
+            app.graduation_date,
             app.get_is_faculty_child_display(),
             app.get_graduation_attempt_display(),
             app.get_has_french_language_display(),
