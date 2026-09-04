@@ -90,6 +90,11 @@ class Application(models.Model):
         ('female', 'Female'),
     ]
 
+    FACULTY_CHILD_CHOICES = [
+        ('yes', 'نعم'),
+        ('no', 'كلا'),
+    ]
+
     BRANCH_CHOICES = [
         ('scientific', 'Scientific'),
         ('biology', 'Biology'),
@@ -127,6 +132,12 @@ class Application(models.Model):
     # Personal / school info
     # -----------------------------
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
+    is_faculty_child = models.CharField(
+        max_length=5,
+        choices=FACULTY_CHILD_CHOICES,
+        default='no',
+        verbose_name='هل انت من ابناء التدريسين'
+    )
     date_of_birth = models.DateField()
 
     examination_id = models.CharField(max_length=50, unique=True)

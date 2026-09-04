@@ -48,10 +48,17 @@
               <input v-model="form.fourth_name" type="text" required class="mt-1 block w-full border rounded-md p-2 shadow-sm">
             </div>
           </div>
-          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label class="block text-sm font-medium text-gray-700">الاسم الكامل للأم <span class="text-red-500">*</span></label>
               <input v-model="form.mother_full_name" type="text" required class="mt-1 block w-full border rounded-md p-2 shadow-sm">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">هل انت من ابناء التدريسين <span class="text-red-500">*</span></label>
+              <select v-model="form.is_faculty_child" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
+                <option value="yes">نعم</option>
+                <option value="no">كلا</option>
+              </select>
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
@@ -228,6 +235,7 @@ const form = ref({
   fourth_name: '',
   mother_full_name: '',
   gender: 'male',
+  is_faculty_child: 'no',
   date_of_birth: '',
   phone_number: '',
   email_address: '',
