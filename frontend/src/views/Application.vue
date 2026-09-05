@@ -180,7 +180,7 @@
               <input 
                 v-model="form.average" 
                 type="number" 
-                step="0.01" 
+                step="0.001" 
                 min="50" 
                 max="100" 
                 required 
@@ -190,7 +190,7 @@
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700">المجموع الكلي <span class="text-red-500">*</span></label>
-              <input v-model="form.total_sum" type="number" step="0.01" required class="mt-1 block w-full border rounded-md p-2 shadow-sm">
+              <input v-model="form.total_sum" type="number" step="0.001" required class="mt-1 block w-full border rounded-md p-2 shadow-sm">
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700">عدد الدروس <span class="text-red-500">*</span></label>

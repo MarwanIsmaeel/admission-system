@@ -185,17 +185,17 @@ class Application(models.Model):
     # -----------------------------
     # Academic data
     # -----------------------------
-    average = models.DecimalField(max_digits=5, decimal_places=2, db_index=True)
+    average = models.DecimalField(max_digits=6, decimal_places=3, db_index=True)
     # Original total sum entered by student before additions
     original_total_sum = models.DecimalField(
         max_digits=8,
-        decimal_places=2,
+        decimal_places=3,
         null=True,
         blank=True,
         verbose_name='المجموع الأصلي (قبل الإضافة)'
     )
     # Final total sum after bonus additions
-    total_sum = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='المجموع الكلي النهائي (بعد الإضافة)')
+    total_sum = models.DecimalField(max_digits=8, decimal_places=3, verbose_name='المجموع الكلي النهائي (بعد الإضافة)')
     number_of_lessons = models.PositiveIntegerField()
 
     # -----------------------------
