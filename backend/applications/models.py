@@ -96,9 +96,10 @@ class Application(models.Model):
         ('no', 'كلا'),
     ]
 
-    FRENCH_LANGUAGE_CHOICES = [
-        ('yes', 'نعم'),
-        ('no', 'كلا'),
+    ADDED_LANGUAGE_CHOICES = [
+        ('none', 'لا يوجد'),
+        ('french', 'اللغة الفرنسية'),
+        ('turkish', 'اللغة التركية'),
     ]
 
     # Choices for graduation attempt ("دور التخرج")
@@ -173,19 +174,19 @@ class Application(models.Model):
         verbose_name='سنة التخرج'
     )
 
-    # French language option ("هل لديك لغة فرنسية")
-    has_french_language = models.CharField(
-        max_length=5,
-        choices=FRENCH_LANGUAGE_CHOICES,
-        default='no',
-        verbose_name='هل لديك لغة فرنسية'
+    # Added language option ("اللغات المضافة")
+    added_language = models.CharField(
+        max_length=10,
+        choices=ADDED_LANGUAGE_CHOICES,
+        default='none',
+        verbose_name='اللغات المضافة'
     )
-    french_degree = models.DecimalField(
+    added_language_degree = models.DecimalField(
         max_digits=5,
         decimal_places=2,
         null=True,
         blank=True,
-        verbose_name='درجة اللغة الفرنسية'
+        verbose_name='درجة اللغة المضافة'
     )
 
     # -----------------------------
@@ -306,15 +307,15 @@ class Application(models.Model):
 
         # graduation_date is stored as an academic year string (e.g. "2025-2026"), no date comparison needed
 
-        # ✅ French language validation
-        if self.has_french_language == 'yes':
-            if self.french_degree is None:
-                raise ValidationError("يرجى إدخال درجة اللغة الفرنسية.")
-            if self.french_degree < 0 or self.french_degree > 100:
-                raise ValidationError("درجة اللغة الفرنسية يجب أن تكون بين 0 و 100.")
+        # ✅ Added language validation
+        if self.added_language in ['french', 'turkish']:
+            if self.added_language_degree is None:
+                raise ValidationError("يرجى إدخال درجة اللغة المضافة.")
+            if self.added_language_degree < 0 or self.added_language_degree > 100:
+                raise ValidationError("درجة اللغة المضافة يجب أن تكون بين 0 و 100.")
 
     def save(self, *args, **kwargs):
-        # ✅ Automatically add all bonus marks (Graduation, French, Faculty Child) on new application creation
+        # ✅ Automatically add all bonus marks (Graduation, Language, Faculty Child) on new application creation
         if not self.pk:
             # Preserve the exact sum entered by the student before additions
             if self.original_total_sum is None and self.total_sum is not None:
@@ -326,12 +327,12 @@ class Application(models.Model):
             if self.graduation_attempt == 'first_round':
                 bonus += Decimal('7.00')
 
-            # 2. French Language Bonus (french_degree * 0.08)
-            if self.has_french_language == 'yes' and self.french_degree is not None:
-                french_bonus = Decimal(str(self.french_degree)) * Decimal('0.08')
-                bonus += french_bonus
+            # 2. Added Language Bonus (french or turkish degree * 0.08)
+            if self.added_language in ['french', 'turkish'] and self.added_language_degree is not None:
+                language_bonus = Decimal(str(self.added_language_degree)) * Decimal('0.08')
+                bonus += language_bonus
             else:
-                self.french_degree = None
+                self.added_language_degree = None
 
             # 3. Faculty Child Bonus (5 * number_of_lessons)
             if self.is_faculty_child == 'yes' and self.number_of_lessons and self.number_of_lessons > 0:

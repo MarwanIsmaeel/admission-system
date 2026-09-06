@@ -145,19 +145,23 @@
               </div>
             </div>
             <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <!-- French Language Option Dropdown (هل لديك لغة فرنسية) -->
+              <!-- Added Language Option Dropdown ("اللغات المضافة") -->
               <div>
-                <label class="block text-sm font-medium text-gray-700">هل لديك لغة فرنسية <span class="text-red-500">*</span></label>
-                <select v-model="form.has_french_language" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
-                  <option value="no">كلا</option>
-                  <option value="yes">نعم</option>
+                <label class="block text-sm font-medium text-gray-700">اللغات المضافة <span class="text-red-500">*</span></label>
+                <select v-model="form.added_language" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
+                  <option value="" disabled selected>اختر اللغة</option>
+                  <option value="none">لا يوجد</option>
+                  <option value="french">اللغة الفرنسية</option>
+                  <option value="turkish">اللغة التركية</option>
                 </select>
               </div>
-              <!-- Conditional French Exam Mark Input Field -->
-              <div v-if="form.has_french_language === 'yes'">
-                <label class="block text-sm font-medium text-gray-700">درجة امتحان اللغة الفرنسية <span class="text-red-500">*</span></label>
+              <!-- Conditional Language Degree Input Field -->
+              <div v-if="form.added_language === 'french' || form.added_language === 'turkish'">
+                <label class="block text-sm font-medium text-gray-700">
+                  درجة {{ form.added_language === 'french' ? 'اللغة الفرنسية' : 'اللغة التركية' }} <span class="text-red-500">*</span>
+                </label>
                 <input 
-                  v-model="form.french_degree" 
+                  v-model="form.added_language_degree" 
                   type="number" 
                   step="0.01" 
                   min="0" 
@@ -293,8 +297,8 @@ const form = ref({
   branch: 'scientific',
   graduation_attempt: 'first_round',
   graduation_date: `${new Date().getFullYear() - 1}-${new Date().getFullYear()}`,
-  has_french_language: 'no',
-  french_degree: null,
+  added_language: '',
+  added_language_degree: null,
   average: null,
   total_sum: null,
   number_of_lessons: '',
@@ -362,23 +366,40 @@ const submitApplication = async () => {
     return;
   }
 
+  if (!form.value.number_of_lessons) {
+    error.value = 'يرجى اختيار عدد الدروس';
+    return;
+  }
+
+  if (!form.value.added_language || form.value.added_language === '') {
+    error.value = 'يرجى اختيار اللغة المضافة أو (لا يوجد)';
+    return;
+  }
+
   submitting.value = true;
   error.value = '';
 
-  // graduation_date is already a formatted academic year string (e.g. "2025-2026"), send directly
+  const languageValue = ['french', 'turkish'].includes(form.value.added_language) 
+    ? form.value.added_language 
+    : 'none';
 
-  // Reset french_degree if has_french_language is 'no'
-  if (form.value.has_french_language !== 'yes') {
-    form.value.french_degree = null;
+  if (languageValue === 'none') {
+    form.value.added_language_degree = null;
   }
 
   const formData = new FormData();
   formData.append('voucher_code', auth.voucherCode);
   
   for (const key in form.value) {
-    if (form.value[key] !== null && form.value[key] !== '') {
+    if (key === 'added_language') {
+      formData.append('added_language', languageValue);
+    } else if (form.value[key] !== null && form.value[key] !== '') {
       formData.append(key, form.value[key]);
     }
+  }
+
+  if (!formData.has('added_language')) {
+    formData.append('added_language', languageValue);
   }
   
   if (upload_document.value) {
@@ -394,7 +415,14 @@ const submitApplication = async () => {
   } catch (err) {
     const data = err.response?.data;
     if (data && typeof data === 'object') {
-        error.value = 'يرجى التأكد من صحة البيانات المدخلة';
+      if (typeof data.error === 'string') {
+        error.value = data.error;
+      } else {
+        const fieldErrors = Object.entries(data)
+          .map(([field, msgs]) => Array.isArray(msgs) ? `${field}: ${msgs.join(', ')}` : `${field}: ${msgs}`)
+          .join(' | ');
+        error.value = fieldErrors || 'يرجى التأكد من صحة البيانات المدخلة';
+      }
     } else {
       error.value = data?.error || 'فشل في إرسال الطلب. يرجى المحاولة لاحقاً';
     }

@@ -16,7 +16,7 @@ def export_to_excel(modeladmin, request, queryset):
 
     headers = [
         "الاسم الكامل", "الرقم الامتحاني", "الفرع", "السنة الدراسية للتخرج", "من أبناء التدريسيين", "دور التخرج",
-        "اللغة الفرنسية", "درجة اللغة الفرنسية",
+        "اللغات المضافة", "درجة اللغة المضافة",
         "المجموع الأصلي (قبل الإضافة)", "المجموع الكلي النهائي (بعد الإضافة)", "عدد الدروس", "المعدل النهائي (%)",
         "الرغبة الأولى", "الرغبة الثانية", "الرغبة الثالثة", "القسم المقبول فيه",
         "حالة الطلب", "رقم الهاتف", "البريد الإلكتروني", "رمز التفعيل"
@@ -45,8 +45,8 @@ def export_to_excel(modeladmin, request, queryset):
             app.graduation_date,
             app.get_is_faculty_child_display(),
             app.get_graduation_attempt_display(),
-            app.get_has_french_language_display(),
-            app.french_degree if app.has_french_language == 'yes' else "-",
+            app.get_added_language_display(),
+            app.added_language_degree if app.added_language in ['french', 'turkish'] else "-",
             orig_sum,
             app.total_sum,
             app.number_of_lessons,
@@ -268,7 +268,7 @@ class ApplicationAdmin(admin.ModelAdmin):
         'full_name_display',
         'is_faculty_child',
         'graduation_attempt',
-        'has_french_language',
+        'added_language',
         'average',
         'round',
         'assigned_department',
@@ -280,7 +280,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     list_filter = [
         'is_faculty_child',
         'graduation_attempt',
-        'has_french_language',
+        'added_language',
         'round',
         'status',
         'branch',
