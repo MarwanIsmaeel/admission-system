@@ -193,7 +193,7 @@
               <!-- <p class="text-[10px] text-gray-500 mt-1">يجب أن يكون بين 50 و 100</p> -->
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">المجموع الكلي <span class="text-red-500">*</span></label>
+              <label class="block text-sm font-medium text-gray-700">المجموع من دون اضافات <span class="text-red-500">*</span></label>
               <input v-model="form.total_sum" type="number" step="0.001" required class="mt-1 block w-full border rounded-md p-2 shadow-sm">
             </div>
             <div>
