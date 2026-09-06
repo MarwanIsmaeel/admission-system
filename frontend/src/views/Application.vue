@@ -194,7 +194,12 @@
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700">عدد الدروس <span class="text-red-500">*</span></label>
-              <input v-model="form.number_of_lessons" type="number" min="1" required class="mt-1 block w-full border rounded-md p-2 shadow-sm">
+              <select v-model.number="form.number_of_lessons" required class="mt-1 block w-full border rounded-md p-2 shadow-sm bg-white">
+                <option value="" disabled selected>اختر عدد الدروس</option>
+                <option :value="5">5 دروس</option>
+                <option :value="6">6 دروس</option>
+                <option :value="7">7 دروس</option>
+              </select>
             </div>
           </div>
           <div class="mt-4">
@@ -292,7 +297,7 @@ const form = ref({
   french_degree: null,
   average: null,
   total_sum: null,
-  number_of_lessons: null,
+  number_of_lessons: '',
   department_preference_1: '',
   department_preference_2: '',
   department_preference_3: '',

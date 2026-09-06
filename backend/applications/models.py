@@ -114,6 +114,12 @@ class Application(models.Model):
         ('applied', 'Applied'),
     ]
 
+    LESSON_COUNT_CHOICES = [
+        (5, '5 دروس'),
+        (6, '6 دروس'),
+        (7, '7 دروس'),
+    ]
+
     STATUS_CHOICES = [
         ('draft', 'Draft'),
         ('submitted', 'Submitted'),
@@ -196,7 +202,10 @@ class Application(models.Model):
     )
     # Final total sum after bonus additions
     total_sum = models.DecimalField(max_digits=8, decimal_places=3, verbose_name='المجموع الكلي النهائي (بعد الإضافة)')
-    number_of_lessons = models.PositiveIntegerField()
+    number_of_lessons = models.PositiveIntegerField(
+        choices=LESSON_COUNT_CHOICES,
+        verbose_name='عدد الدروس'
+    )
 
     # -----------------------------
     # Documents
@@ -288,8 +297,8 @@ class Application(models.Model):
             raise ValidationError("Average must be between 0 and 100.")
 
         # ✅ Lessons
-        if self.number_of_lessons <= 0:
-            raise ValidationError("Number of lessons must be greater than zero.")
+        if self.number_of_lessons not in [5, 6, 7]:
+            raise ValidationError("عدد الدروس غير مسموح به. يجب اختيار 5، 6، أو 7 دروس فقط.")
 
         # ✅ Date checks
         if self.date_of_birth >= date.today():
