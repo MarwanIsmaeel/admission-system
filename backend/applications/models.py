@@ -323,9 +323,9 @@ class Application(models.Model):
 
             bonus = Decimal('0.00')
 
-            # 1. Graduation Attempt Bonus (+7 for First Round)
-            if self.graduation_attempt == 'first_round':
-                bonus += Decimal('7.00')
+            # 1. Graduation Attempt Bonus (Equal to number_of_lessons for First Round)
+            if self.graduation_attempt == 'first_round' and self.number_of_lessons:
+                bonus += Decimal(str(self.number_of_lessons))
 
             # 2. Added Language Bonus (french or turkish degree * 0.08)
             if self.added_language in ['french', 'turkish'] and self.added_language_degree is not None:
