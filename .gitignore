@@ -21,3 +21,4 @@ Thumbs.db
 
 # Deployment artifacts
 /deploy/
+backend.zip

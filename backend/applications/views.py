@@ -1,3 +1,4 @@
+from pathlib import PurePosixPath
 from django.shortcuts import render, redirect
 from rest_framework import status, generics
 from rest_framework.decorators import api_view
@@ -5,16 +6,68 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django_ratelimit.decorators import ratelimit
 
-from django.http import HttpResponse
+
+from django.http import FileResponse, Http404, HttpResponse
 from openpyxl import Workbook
 from django.utils import timezone
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.views.decorators.http import require_http_methods
+
 
 from .models import Voucher, Application, Department, AdmissionRound
 from .serializers import (
     VoucherSerializer, ApplicationSerializer, 
     DepartmentSerializer, AdmissionRoundSerializer
 )
+
+
+
+
+@require_http_methods(["GET", "HEAD"])
+def protected_application_document(request, filename):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+
+    if not request.user.is_active:
+        raise PermissionDenied
+
+    if not request.user.is_staff:
+        raise PermissionDenied
+
+    if not request.user.has_perm("applications.view_application"):
+        raise PermissionDenied
+
+    stored_name = f"documents/applications/{filename}"
+
+    application = (
+        Application.objects.only("upload_document")
+        .filter(upload_document=stored_name)
+        .first()
+    )
+
+    if application is None or not application.upload_document:
+        raise Http404("Document not found.")
+
+    try:
+        file_object = application.upload_document.storage.open(
+            application.upload_document.name,
+            "rb",
+        )
+    except (FileNotFoundError, OSError):
+        raise Http404("Document not found.")
+
+    response = FileResponse(
+        file_object,
+        as_attachment=False,
+        filename=PurePosixPath(application.upload_document.name).name,
+    )
+
+    response["Cache-Control"] = "private, no-store"
+
+    return response
+
+
+
 
 # =========================================================
 # ✅ 1. Voucher Verification API
