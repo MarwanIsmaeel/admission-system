@@ -72,13 +72,13 @@ def protected_application_document(request, filename):
 # =========================================================
 # ✅ 1. Voucher Verification API
 # =========================================================
-@ratelimit(key='ip', rate='5/15m', block=False)
+# @ratelimit(key='ip', rate='5/15m', block=False)
 @api_view(['POST'])
 def verify_voucher(request):
-    if getattr(request, 'limited', False):
-        return Response({
-            'error': 'لقد تجاوزت الحد المسموح به للمحاولات. يرجى الانتظار 15 دقيقة والمحاولة مرة أخرى.'
-        }, status=status.HTTP_429_TOO_MANY_REQUESTS)
+    # if getattr(request, 'limited', False):
+    #     return Response({
+    #         'error': 'لقد تجاوزت الحد المسموح به للمحاولات. يرجى الانتظار 15 دقيقة والمحاولة مرة أخرى.'
+    #     }, status=status.HTTP_429_TOO_MANY_REQUESTS)
 
     code = request.data.get('code', '').strip()
     if not code:
